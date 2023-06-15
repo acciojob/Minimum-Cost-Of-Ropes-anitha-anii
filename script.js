@@ -1,27 +1,43 @@
-
+// Function to calculate minimum cost of ropes
 function calculateMinimumCostRopes() {
-  
+  // Get the input values from the text field
   var input = document.getElementById("ropes-input").value;
-    var ropes = input.split(",").map(Number);
-    var priorityQueue = new MinHeap();
 
-   for (var i = 0; i < ropes.length; i++) {
+  // Split the input string into an array of rope lengths
+  var ropes = input.split(",").map(Number);
+
+  // Create a priority queue (min heap)
+  var priorityQueue = new MinHeap();
+
+  // Insert all ropes into the priority queue
+  for (var i = 0; i < ropes.length; i++) {
     priorityQueue.insert(ropes[i]);
   }
 
+  // Variable to store the total cost
   var totalCost = 0;
+
+  // Merge ropes until only one rope is left in the priority queue
   while (priorityQueue.size() > 1) {
-        var rope1 = priorityQueue.extractMin();
+    // Extract the two smallest ropes from the priority queue
+    var rope1 = priorityQueue.extractMin();
     var rope2 = priorityQueue.extractMin();
-        var cost = rope1 + rope2;
-       totalCost += cost;
-        priorityQueue.insert(cost);
+
+    // Calculate the cost of merging the ropes
+    var cost = rope1 + rope2;
+
+    // Add the cost to the total cost
+    totalCost += cost;
+
+    // Insert the merged rope back into the priority queue
+    priorityQueue.insert(cost);
   }
 
- 
+  // Output the minimum cost of connecting the ropes
   document.getElementById("result").innerHTML = totalCost;
 }
 
+// MinHeap class implementation
 class MinHeap {
   constructor() {
     this.heap = [];
@@ -91,6 +107,12 @@ class MinHeap {
     this.heap[index2] = temp;
   }
 }
+
+// Call the function to calculate minimum cost when the form is submitted
+document.getElementById("ropes-form").addEventListener("submit", function (event) {
+  event.preventDefault();
+  calculateMinimumCostRopes();
+});
 
 
   
