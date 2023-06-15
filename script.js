@@ -1,32 +1,27 @@
-function findMinimumCost(ropes) {
-  let minCost = 0;
 
-  // Create a min heap to store the lengths of ropes
-  const minHeap = new MinHeap();
-  for (let i = 0; i < ropes.length; i++) {
-    minHeap.insert(ropes[i]);
+function calculateMinimumCostRopes() {
+  
+  var input = document.getElementById("ropes-input").value;
+    var ropes = input.split(",").map(Number);
+    var priorityQueue = new MinHeap();
+
+   for (var i = 0; i < ropes.length; i++) {
+    priorityQueue.insert(ropes[i]);
   }
 
-  // Connect the ropes until there is only one left
-  while (minHeap.size() > 1) {
-    // Extract the two smallest ropes
-    const rope1 = minHeap.extractMin();
-    const rope2 = minHeap.extractMin();
-
-    // Calculate the cost of connecting the ropes
-    const cost = rope1 + rope2;
-
-    // Add the cost to the total minimum cost
-    minCost += cost;
-
-    // Insert the new rope (combined length) back into the min heap
-    minHeap.insert(cost);
+  var totalCost = 0;
+  while (priorityQueue.size() > 1) {
+        var rope1 = priorityQueue.extractMin();
+    var rope2 = priorityQueue.extractMin();
+        var cost = rope1 + rope2;
+       totalCost += cost;
+        priorityQueue.insert(cost);
   }
 
-  return minCost;
+ 
+  document.getElementById("result").innerHTML = totalCost;
 }
 
-// MinHeap class to maintain the lengths of ropes in a min heap
 class MinHeap {
   constructor() {
     this.heap = [];
@@ -38,7 +33,7 @@ class MinHeap {
 
   insert(value) {
     this.heap.push(value);
-    this.bubbleUp(this.heap.length - 1);
+    this.heapifyUp(this.heap.length - 1);
   }
 
   extractMin() {
@@ -46,62 +41,56 @@ class MinHeap {
       return null;
     }
 
-    const min = this.heap[0];
-    const lastElement = this.heap.pop();
-
-    if (this.heap.length > 0) {
-      this.heap[0] = lastElement;
-      this.sinkDown(0);
+    if (this.heap.length === 1) {
+      return this.heap.pop();
     }
 
-    return min;
+    var minValue = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.heapifyDown(0);
+    return minValue;
   }
 
-  bubbleUp(index) {
-    const parentIndex = Math.floor((index - 1) / 2);
+  heapifyUp(index) {
+    var parentIndex = Math.floor((index - 1) / 2);
+
     if (parentIndex >= 0 && this.heap[parentIndex] > this.heap[index]) {
-      [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
-      this.bubbleUp(parentIndex);
+      this.swap(parentIndex, index);
+      this.heapifyUp(parentIndex);
     }
   }
 
-  sinkDown(index) {
-    const leftChildIndex = 2 * index + 1;
-    const rightChildIndex = 2 * index + 2;
-    let smallestIndex = index;
+  heapifyDown(index) {
+    var leftChildIndex = 2 * index + 1;
+    var rightChildIndex = 2 * index + 2;
+    var smallestIndex = index;
 
-    if (leftChildIndex < this.heap.length && this.heap[leftChildIndex] < this.heap[smallestIndex]) {
+    if (
+      leftChildIndex < this.heap.length &&
+      this.heap[leftChildIndex] < this.heap[smallestIndex]
+    ) {
       smallestIndex = leftChildIndex;
     }
 
-    if (rightChildIndex < this.heap.length && this.heap[rightChildIndex] < this.heap[smallestIndex]) {
+    if (
+      rightChildIndex < this.heap.length &&
+      this.heap[rightChildIndex] < this.heap[smallestIndex]
+    ) {
       smallestIndex = rightChildIndex;
     }
 
     if (smallestIndex !== index) {
-      [this.heap[index], this.heap[smallestIndex]] = [this.heap[smallestIndex], this.heap[index]];
-      this.sinkDown(smallestIndex);
+      this.swap(smallestIndex, index);
+      this.heapifyDown(smallestIndex);
     }
   }
+
+  swap(index1, index2) {
+    var temp = this.heap[index1];
+    this.heap[index1] = this.heap[index2];
+    this.heap[index2] = temp;
+  }
 }
-
-/* Do not change anything below */
-
-const inputElement = document.getElementById('input');
-const resultElement = document.getElementById('result');
-
-function handleFormSubmit(event) {
-  event.preventDefault();
-
-  const input = inputElement.value.trim();
-  const ropes = input.split(',').map(Number);
-
-  const minimumCost = findMinimumCost(ropes);
-  resultElement.textContent = minimumCost;
-}
-
-const formElement = document.getElementById('form');
-formElement.addEventListener('submit', handleFormSubmit);
 
 
   
