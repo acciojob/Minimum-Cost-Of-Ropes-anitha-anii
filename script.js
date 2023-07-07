@@ -1,38 +1,43 @@
-function threeSum(arr, target) {
-// write your code here
-	arr.sort((a, b) => a - b);
-  
-  // Initialize variables
-  let closestSum = arr[0] + arr[1] + arr[2];
-  
-  // Iterate through the array
-  for (let i = 0; i < arr.length - 2; i++) {
-    let left = i + 1;
-    let right = arr.length - 1;
-    
-    while (left < right) {
-      const sum = arr[i] + arr[left] + arr[right];
-      
-      // Check if the current sum is closer to the target
-      if (Math.abs(sum - target) < Math.abs(closestSum - target)) {
-        closestSum = sum;
-      }
-      
-      if (sum < target) {
-        left++;
-      } else if (sum > target) {
-        right--;
-      } else {
-        // Found an exact match, so return the sum
-        return sum;
-      }
-    }
+function compare(a, b) {
+  if (a < b) {
+      return -1;
+  } else if (a > b) {
+      return 1;
+  } else {
+      return 0;
   }
-  
-  return closestSum;
-  
 }
  
-module.exports = threeSum;
-    
+ 
+ 
+function calculateMinCost() {
+  //your code here
+  let str=document.getElementById('rope-lengths').value.split(",");
+  let arr=str.map((str)=>parseInt(str));
+  // console.log(arr);
+  
+let total=0;
+arr=arr.sort(compare);
+// console.log("arr ",arr);
+while(arr.length>=2){
+  let sum=arr[0]+arr[1];
+  // console.log(sum);
+  let rem=[];
+  rem.push(sum);
+  for(let k=2;k<arr.length;k++){
+    rem.push(arr[k]);
+  }
+  rem=rem.sort(compare);
+  // console.log("rem ",rem);
+  arr=[...rem];
+  // console.log("arr ",arr);
+  total=total+sum;
+  // console.log("total "+total+"----------------------");
+}
+console.log(total);
+ 
+ 
+let result=document.getElementById('result');
+result.innerHTML=total;
+}  
   
